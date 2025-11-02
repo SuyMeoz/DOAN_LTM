@@ -55,30 +55,39 @@ namespace DnsLookupTool
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("=========================================");
-            Console.WriteLine("    DNS Lookup Tool - .NET Console App   ");
-            Console.WriteLine("=========================================");
+            Console.WriteLine("╔════════════════════════════════════════╗");
+            Console.WriteLine("║        🌐 DNS Lookup Tool v1.0         ║");
+            Console.WriteLine("║        .NET Console Application        ║");
+            Console.WriteLine("╚════════════════════════════════════════╝");
             Console.ResetColor();
-        }
-
-        static void PrintMenu()
-        {
-            Console.WriteLine("1) Tra cứu IP từ tên miền (A/AAAA)");
-            Console.WriteLine("2) Tra cứu ngược từ IP → tên miền (PTR)");
-            Console.WriteLine("3) Đo thời gian phản hồi DNS");
-            Console.WriteLine("4) Xuất kết quả ra file");
-            Console.WriteLine("5) Thoát");
             Console.WriteLine();
         }
-
+        
+        static void PrintMenu()
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Chọn chức năng:");
+            Console.ResetColor();
+        
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(" 1) 🔎 Tra cứu IP từ tên miền (A/AAAA)");
+            Console.WriteLine(" 2) ↩️  Tra cứu ngược từ IP → tên miền (PTR)");
+            Console.WriteLine(" 3) ⏱️  Đo thời gian phản hồi DNS");
+            Console.WriteLine(" 4) 💾 Xuất kết quả ra file");
+            Console.WriteLine(" 5) ❌ Thoát");
+            Console.ResetColor();
+            Console.WriteLine();
+        }
+        
         static void Pause()
         {
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.Write("Nhấn Enter để tiếp tục...");
+            Console.Write("👉 Nhấn Enter để tiếp tục...");
             Console.ResetColor();
             Console.ReadLine();
         }
+
 
         // ======= Core features =======
 
@@ -425,3 +434,4 @@ namespace DnsLookupTool
         public string[] Aliases { get; set; } = Array.Empty<string>();
     }
 }
+
