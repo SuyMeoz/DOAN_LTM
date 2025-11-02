@@ -1,0 +1,15 @@
+/workspaces/DOAN_LTM/DNS_LOOKUP/bin/Debug/net8.0/DNS_LOOKUP
+/workspaces/DOAN_LTM/DNS_LOOKUP/bin/Debug/net8.0/DNS_LOOKUP.deps.json
+/workspaces/DOAN_LTM/DNS_LOOKUP/bin/Debug/net8.0/DNS_LOOKUP.runtimeconfig.json
+/workspaces/DOAN_LTM/DNS_LOOKUP/bin/Debug/net8.0/DNS_LOOKUP.dll
+/workspaces/DOAN_LTM/DNS_LOOKUP/bin/Debug/net8.0/DNS_LOOKUP.pdb
+/workspaces/DOAN_LTM/DNS_LOOKUP/obj/Debug/net8.0/DNS_LOOKUP.GeneratedMSBuildEditorConfig.editorconfig
+/workspaces/DOAN_LTM/DNS_LOOKUP/obj/Debug/net8.0/DNS_LOOKUP.AssemblyInfoInputs.cache
+/workspaces/DOAN_LTM/DNS_LOOKUP/obj/Debug/net8.0/DNS_LOOKUP.AssemblyInfo.cs
+/workspaces/DOAN_LTM/DNS_LOOKUP/obj/Debug/net8.0/DNS_LOOKUP.csproj.CoreCompileInputs.cache
+/workspaces/DOAN_LTM/DNS_LOOKUP/obj/Debug/net8.0/DNS_LOOKUP.sourcelink.json
+/workspaces/DOAN_LTM/DNS_LOOKUP/obj/Debug/net8.0/DNS_LOOKUP.dll
+/workspaces/DOAN_LTM/DNS_LOOKUP/obj/Debug/net8.0/refint/DNS_LOOKUP.dll
+/workspaces/DOAN_LTM/DNS_LOOKUP/obj/Debug/net8.0/DNS_LOOKUP.pdb
+/workspaces/DOAN_LTM/DNS_LOOKUP/obj/Debug/net8.0/DNS_LOOKUP.genruntimeconfig.cache
+/workspaces/DOAN_LTM/DNS_LOOKUP/obj/Debug/net8.0/ref/DNS_LOOKUP.dll

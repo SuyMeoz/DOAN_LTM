@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "DNS_LOOKUP/1.0.0": {
+        "runtime": {
+          "DNS_LOOKUP.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "DNS_LOOKUP/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
