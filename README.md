@@ -56,5 +56,5 @@ Người dùng chỉ cần nhập một tên miền (ví dụ: `google.com`), ch
 ### 🚀 Cách chạy chương trình
 1. Clone repo về máy:
    ```bash
-   git clone https://github.com/your-username/dns-lookup-tool.git
-   cd dns-lookup-tool
+   git clone [https://github.com/your-username/dns-lookup-tool.git](https://github.com/SuyMeoz/DOAN_LTM.git)
+   cd DNS_LOOKUP
