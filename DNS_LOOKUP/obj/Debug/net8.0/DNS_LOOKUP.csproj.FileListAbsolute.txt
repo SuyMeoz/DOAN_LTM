@@ -13,3 +13,7 @@
 /workspaces/DOAN_LTM/DNS_LOOKUP/obj/Debug/net8.0/DNS_LOOKUP.pdb
 /workspaces/DOAN_LTM/DNS_LOOKUP/obj/Debug/net8.0/DNS_LOOKUP.genruntimeconfig.cache
 /workspaces/DOAN_LTM/DNS_LOOKUP/obj/Debug/net8.0/ref/DNS_LOOKUP.dll
+/workspaces/DOAN_LTM/DNS_LOOKUP/bin/Debug/net8.0/DnsClient.dll
+/workspaces/DOAN_LTM/DNS_LOOKUP/bin/Debug/net8.0/Newtonsoft.Json.dll
+/workspaces/DOAN_LTM/DNS_LOOKUP/obj/Debug/net8.0/DNS_LOOKUP.csproj.AssemblyReference.cache
+/workspaces/DOAN_LTM/DNS_LOOKUP/obj/Debug/net8.0/DNS_LOOKUP.csproj.Up2Date
