@@ -1,60 +1,66 @@
-# 🌐 Ứng dụng phân giải tên miền thành địa chỉ IP
+# DNS Lookup Tool (Console) - DOAN_LTM
 
-### 📖 Giới thiệu
-Đây là đồ án môn **Lập trình mạng máy tính** với mục tiêu xây dựng một công cụ đơn giản giúp người dùng tra cứu DNS.  
-Người dùng chỉ cần nhập một tên miền (ví dụ: `google.com`), chương trình sẽ hiển thị danh sách các địa chỉ IP tương ứng.
+Tiện ích console đơn giản để tra cứu DNS, đo thời gian phản hồi, batch xử lý và lưu lịch sử. Dùng cho mục đích học tập/đồ án.
 
----
+## Tính năng
+- Tra cứu A / AAAA (tên miền → IP).
+- Tra cứu ngược PTR (IP → hostname).
+- Tra cứu các loại bản ghi: A, AAAA, PTR, MX, CNAME, TXT, NS, SOA.
+- Đo thời gian phản hồi (n lần) và thống kê (trung bình / min / max).
+- Tra cứu nhiều bản ghi cho một query.
+- Batch xử lý từ file (mỗi dòng một query).
+- Lưu lịch sử truy vấn vào `history.json`.
+- Xuất kết quả sang file (.txt/.csv) và tùy chọn nén ZIP.
+- Cấu hình DNS server tùy chỉnh.
+- Cài đặt bảo mật cơ bản (Force TCP only, DNSSEC — DNSSEC là stub).
+- Tạo báo cáo đơn giản (`report.txt`).
 
-### 📝 Tóm tắt đồ án
-- Người dùng nhập vào một **tên miền**.
-- Ứng dụng sử dụng lớp **`Dns` của .NET** để phân giải tên miền.
-- Kết quả trả về là danh sách các địa chỉ **IPv4/IPv6** tương ứng.
+## Cơ chế hoạt động (tóm tắt)
+- Ứng dụng dùng thư viện DnsClient để thực hiện truy vấn DNS.
+- Tạo LookupClient qua `CreateLookupClient()` với `LookupClientOptions` (có thể sử dụng DNS tùy chỉnh, timeout và số lần thử).
+- Các chức năng:
+  - ResolveDomain: gọi `client.Query(domain, QueryType.A)` để lấy A records.
+  - ReverseLookup: gọi `client.QueryReverse(ip)` và đọc `PtrRecord.PtrDomainName` để lấy hostname.
+  - QueryMultipleRecords: gọi `client.QueryAsync(query, queryType)` và xử lý từng kiểu bản ghi theo kiểu record.
+  - MeasureResponseTime: lặp gọi Query để đo thời gian (Stopwatch).
+  - BatchProcess: đọc file, chạy Query cho từng dòng, lưu kết quả.
+- Lịch sử truy vấn được lưu vào danh sách `QueryHistory` và ghi/đọc JSON từ `history.json`.
+- Cấu hình bảo mật được lưu/đọc từ `security_settings.json` (ForceTcpOnly, EnableDnsSec). Áp dụng ForceTcpOnly yêu cầu chỉnh thêm `CreateLookupClient()` nếu cần ép dùng TCP.
+- Báo cáo: gom thống kê từ lịch sử và ghi `report.txt`.
 
----
+## Thư viện / phụ thuộc
+- .NET SDK 6.0+ (hoặc tương thích)
+- NuGet packages:
+  - DnsClient
+  - Newtonsoft.Json
 
-### 🎯 Kết quả đạt được
-- ✅ Giải thích được **khái niệm và vai trò của hệ thống DNS** trong mạng (CLO1.1).  
-- ✅ Sử dụng lớp **`Dns` của .NET** để thực hiện các truy vấn DNS (CLO2.1, CLO3.1).  
-- ✅ Thiết kế một **công cụ mạng đơn giản, hữu ích** (CLO3.2).  
+## Các file quan trọng
+- Source: `/workspaces/DOAN_LTM/DNS_LOOKUP/Program.cs`
+- Lịch sử: `history.json`
+- Cấu hình bảo mật: `security_settings.json`
+- Báo cáo: `report.txt`
+- README: `/workspaces/DOAN_LTM/README.md`
 
----
+## Cài đặt & chạy (trong dev container Ubuntu)
+1. Mở terminal trong workspace:
+   cd /workspaces/DOAN_LTM/DNS_LOOKUP
+2. Cài các package nếu chưa có:
+   dotnet add package DnsClient
+   dotnet add package Newtonsoft.Json
+3. Build và chạy:
+   dotnet build
+   dotnet run
 
-### 🔧 Các hướng mở rộng chức năng
-1. **Hỗ trợ nhiều loại bản ghi DNS**  
-   - MX (Mail Exchange) – máy chủ email  
-   - NS (Name Server) – máy chủ tên miền  
-   - CNAME – bí danh tên miền  
-   - TXT – bản ghi văn bản (SPF, DKIM)  
+## Kiểm tra PTR ngoài chương trình
+- nslookup 8.8.8.8
+- dig -x 8.8.8.8 +short
+Lưu ý: 8.8.8.8 thường trả về `dns.google` chứ không phải `google.com`.
 
-2. **Kiểm tra tốc độ phản hồi DNS**  
-   - Đo thời gian truy vấn từ nhiều DNS server (Google DNS, Cloudflare, OpenDNS).  
-   - So sánh hiệu suất giữa các máy chủ DNS.  
+## Gợi ý mở rộng / debugging
+- Muốn ép dùng TCP hoặc bật DNSSEC thực sự, chỉnh `CreateLookupClient()` để thiết lập `LookupClientOptions` tương ứng.
+- Để xem chi tiết bản ghi PTR, dùng `result.Answers.OfType<PtrRecord>()` và lấy `PtrDomainName`.
+- Batch có thể song song hóa bằng `Parallel.ForEach` hoặc Task-based concurrency nếu cần.
+- Kiểm tra quyền ghi file và đường dẫn nếu không tạo được `history.json`/`report.txt`.
 
-3. **Phát hiện lỗi cấu hình DNS**  
-   - Kiểm tra bản ghi MX hợp lệ.  
-   - Kiểm tra sự trùng lặp hoặc thiếu bản ghi NS.  
-   - Cảnh báo nếu thiếu bản ghi A/AAAA.  
-
-4. **Xuất báo cáo kết quả**  
-   - Lưu kết quả ra file `.txt`, `.csv`, hoặc `.html`.  
-
-5. **Giao diện nâng cao**  
-   - Ngoài console, có thể phát triển GUI bằng **WinForms hoặc WPF**.  
-   - Hiển thị kết quả dạng bảng, có màu sắc phân biệt từng loại bản ghi.  
-   - Thêm biểu đồ nhỏ để hiển thị tốc độ phản hồi DNS.  
-
-6. **Tích hợp tra cứu ngược (Reverse DNS)**  
-   - Nhập địa chỉ IP → trả về tên miền tương ứng.  
-
-7. **So sánh kết quả từ nhiều DNS server**  
-   - Ví dụ: so sánh Google DNS và Cloudflare DNS.  
-   - Phát hiện tình trạng **DNS poisoning** hoặc sự khác biệt do caching.  
-
----
-
-### 🚀 Cách chạy chương trình
-1. Clone repo về máy:
-   ```bash
-   git clone https://github.com/SuyMeoz/DOAN_LTM.git
-   cd DNS_LOOKUP
+## License
+Code dùng cho mục đích học tập / đồ án. Tuỳ chỉnh và tái sử dụng tuân theo giấy phép dự án (không kèm giấy phép cụ thể trong repo).
