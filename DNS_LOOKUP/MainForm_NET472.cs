@@ -5,14 +5,13 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using DnsClient;
 using Newtonsoft.Json;
 
 namespace DnsLookupTool
 {
-    public partial class MainForm : Form
+    public class MainForm_NET472 : Form
     {
         // Configuration
         private IPAddress CustomDnsServer;
@@ -25,7 +24,6 @@ namespace DnsLookupTool
 
         // UI Controls
         private TabControl tabControl;
-        private Panel headerPanel;
         private Label lblDnsServer;
         private Button btnConfigDns;
 
@@ -62,7 +60,7 @@ namespace DnsLookupTool
         private Button btnResetSecurity;
         private Button btnExportResults;
 
-        public MainForm()
+        public MainForm_NET472()
         {
             Text = "DNS Lookup Tool v2.0";
             Size = new Size(950, 700);
@@ -77,7 +75,7 @@ namespace DnsLookupTool
 
         private void InitializeComponent()
         {
-            // Main Tab Control - KHÔNG CÓ HEADER
+            // KHÔNG CÓ HEADER - TAB CONTROL CHIẾM TOÀN BỘ FORM
             tabControl = new TabControl
             {
                 Dock = DockStyle.Fill,
@@ -96,11 +94,11 @@ namespace DnsLookupTool
 
         private void CreateDomainLookupTab()
         {
-            var tabPage = new TabPage { Text = "🔍 A/AAAA Lookup", AutoScroll = true };
+            TabPage tabPage = new TabPage { Text = "🔍 A/AAAA Lookup", AutoScroll = true };
             tabPage.BackColor = Color.White;
             tabPage.Padding = new Padding(10);
 
-            var lblInput = new Label
+            Label lblInput = new Label
             {
                 Text = "Domain Name:",
                 Location = new Point(20, 20),
@@ -155,11 +153,11 @@ namespace DnsLookupTool
 
         private void CreateReverseLookupTab()
         {
-            var tabPage = new TabPage { Text = "↩️ PTR Lookup", AutoScroll = true };
+            TabPage tabPage = new TabPage { Text = "↩️ PTR Lookup", AutoScroll = true };
             tabPage.BackColor = Color.White;
             tabPage.Padding = new Padding(10);
 
-            var lblInput = new Label
+            Label lblInput = new Label
             {
                 Text = "IP Address:",
                 Location = new Point(20, 20),
@@ -204,11 +202,11 @@ namespace DnsLookupTool
 
         private void CreateMultipleRecordsTab()
         {
-            var tabPage = new TabPage { Text = "📋 DNS Records", AutoScroll = true };
+            TabPage tabPage = new TabPage { Text = "📋 DNS Records", AutoScroll = true };
             tabPage.BackColor = Color.White;
             tabPage.Padding = new Padding(10);
 
-            var lblInput = new Label
+            Label lblInput = new Label
             {
                 Text = "Domain or IP:",
                 Location = new Point(20, 20),
@@ -226,7 +224,7 @@ namespace DnsLookupTool
             };
             tabPage.Controls.Add(txtQueryMulti);
 
-            var lblType = new Label
+            Label lblType = new Label
             {
                 Text = "Record Type:",
                 Location = new Point(330, 20),
@@ -273,11 +271,11 @@ namespace DnsLookupTool
 
         private void CreateBatchProcessTab()
         {
-            var tabPage = new TabPage { Text = "📦 Batch Process", AutoScroll = true };
+            TabPage tabPage = new TabPage { Text = "📦 Batch Process", AutoScroll = true };
             tabPage.BackColor = Color.White;
             tabPage.Padding = new Padding(10);
 
-            var lblFile = new Label
+            Label lblFile = new Label
             {
                 Text = "Batch File (one query per line):",
                 Location = new Point(20, 20),
@@ -344,7 +342,7 @@ namespace DnsLookupTool
 
         private void CreateHistoryTab()
         {
-            var tabPage = new TabPage { Text = "📜 History", AutoScroll = true };
+            TabPage tabPage = new TabPage { Text = "📜 History", AutoScroll = true };
             tabPage.BackColor = Color.White;
             tabPage.Padding = new Padding(10);
 
@@ -365,7 +363,7 @@ namespace DnsLookupTool
 
             tabPage.Controls.Add(dgvHistory);
 
-            var btnClearHistory = new Button
+            Button btnClearHistory = new Button
             {
                 Text = "🗑️ Clear",
                 Location = new Point(20, 430),
@@ -389,11 +387,11 @@ namespace DnsLookupTool
 
         private void CreateSettingsTab()
         {
-            var tabPage = new TabPage { Text = "⚙️ Settings", AutoScroll = true };
+            TabPage tabPage = new TabPage { Text = "⚙️ Settings", AutoScroll = true };
             tabPage.BackColor = Color.White;
             tabPage.Padding = new Padding(20);
 
-            var lblSecurity = new Label
+            Label lblSecurity = new Label
             {
                 Text = "Security Settings:",
                 Location = new Point(20, 20),
@@ -445,7 +443,7 @@ namespace DnsLookupTool
             };
             tabPage.Controls.Add(btnResetSecurity);
 
-            var lblExport = new Label
+            Label lblExport = new Label
             {
                 Text = "Export & Report:",
                 Location = new Point(20, 180),
@@ -467,7 +465,7 @@ namespace DnsLookupTool
             btnExportResults.Click += BtnExportResults_Click;
             tabPage.Controls.Add(btnExportResults);
 
-            var btnGenerateReport = new Button
+            Button btnGenerateReport = new Button
             {
                 Text = "📊 Generate Report",
                 Location = new Point(180, 210),
@@ -486,7 +484,7 @@ namespace DnsLookupTool
         // Event Handlers
         private void BtnLookupDomain_Click(object sender, EventArgs e)
         {
-            var domain = txtDomain.Text.Trim();
+            string domain = txtDomain.Text.Trim();
             if (string.IsNullOrWhiteSpace(domain))
             {
                 MessageBox.Show("Please enter a domain name", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -498,9 +496,9 @@ namespace DnsLookupTool
 
             try
             {
-                var client = CreateLookupClient();
-                var sw = System.Diagnostics.Stopwatch.StartNew();
-                var result = client.Query(domain, QueryType.A);
+                LookupClient client = CreateLookupClient();
+                System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+                DnsClient.Protocol.IDnsQueryResponse result = client.Query(domain, QueryType.A);
                 sw.Stop();
 
                 if (result.Answers.Count == 0)
@@ -510,8 +508,8 @@ namespace DnsLookupTool
                     return;
                 }
 
-                var addresses = result.Answers.OfType<DnsClient.Protocol.ARecord>().Select(r => r.Address.ToString()).ToArray();
-                foreach (var ip in addresses)
+                string[] addresses = result.Answers.OfType<DnsClient.Protocol.ARecord>().Select(r => r.Address.ToString()).ToArray();
+                foreach (string ip in addresses)
                 {
                     lstResults.Items.Add("📌 " + ip);
                 }
@@ -529,8 +527,9 @@ namespace DnsLookupTool
 
         private void BtnReverseIp_Click(object sender, EventArgs e)
         {
-            var ipText = txtIpReverse.Text.Trim();
-            if (!IPAddress.TryParse(ipText, out var ip))
+            string ipText = txtIpReverse.Text.Trim();
+            IPAddress ip;
+            if (!IPAddress.TryParse(ipText, out ip))
             {
                 MessageBox.Show("Invalid IP address", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -541,46 +540,46 @@ namespace DnsLookupTool
 
             try
             {
-                var client = CreateLookupClient();
-                var sw = System.Diagnostics.Stopwatch.StartNew();
-                var result = await client.QueryReverseAsync(ip);
+                LookupClient client = CreateLookupClient();
+                System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+                DnsClient.Protocol.IDnsQueryResponse result = client.QueryReverse(ip);
                 sw.Stop();
 
                 rtbReverseResults.Clear();
-                var ptr = result.Answers.OfType<DnsClient.Protocol.PtrRecord>().FirstOrDefault();
-                var hostName = ptr?.PtrDomainName?.ToString() ?? "Not found";
+                DnsClient.Protocol.PtrRecord ptr = result.Answers.OfType<DnsClient.Protocol.PtrRecord>().FirstOrDefault();
+                string hostName = ptr != null ? ptr.PtrDomainName.ToString() : "Not found";
 
-                rtbReverseResults.AppendText($"IP: {ip}\r\n");
-                rtbReverseResults.AppendText($"Hostname: {hostName}\r\n");
-                rtbReverseResults.AppendText($"Time: {sw.ElapsedMilliseconds}ms\r\n");
+                rtbReverseResults.AppendText("IP: " + ip + "\r\n");
+                rtbReverseResults.AppendText("Hostname: " + hostName + "\r\n");
+                rtbReverseResults.AppendText("Time: " + sw.ElapsedMilliseconds + "ms\r\n");
 
                 SaveToHistory("PTR", ip.ToString(), sw.ElapsedMilliseconds, hostName);
                 RefreshHistory();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}", "Reverse Lookup Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error: " + ex.Message, "Reverse Lookup Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private async void BtnQueryMulti_Click(object? sender, EventArgs e)
+        private void BtnQueryMulti_Click(object sender, EventArgs e)
         {
-            var query = txtQueryMulti.Text.Trim();
+            string query = txtQueryMulti.Text.Trim();
             if (string.IsNullOrWhiteSpace(query))
             {
                 MessageBox.Show("Please enter a query", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            var recordType = GetQueryType(cmbRecordType.SelectedItem?.ToString() ?? "A");
+            QueryType recordType = GetQueryType(cmbRecordType.SelectedItem.ToString());
             rtbMultiResults.Clear();
             rtbMultiResults.AppendText("Querying...\r\n");
 
             try
             {
-                var client = CreateLookupClient();
-                var sw = System.Diagnostics.Stopwatch.StartNew();
-                var result = await client.QueryAsync(query, recordType);
+                LookupClient client = CreateLookupClient();
+                System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+                DnsClient.Protocol.IDnsQueryResponse result = client.Query(query, recordType);
                 sw.Stop();
 
                 rtbMultiResults.Clear();
@@ -591,26 +590,26 @@ namespace DnsLookupTool
                     return;
                 }
 
-                foreach (var answer in result.Answers)
+                foreach (DnsClient.Protocol.DnsResourceRecord answer in result.Answers)
                 {
                     string recordStr = FormatRecord(recordType, answer);
-                    rtbMultiResults.AppendText($"• {recordStr}\r\n");
+                    rtbMultiResults.AppendText("• " + recordStr + "\r\n");
                 }
 
-                rtbMultiResults.AppendText($"\r\nTime: {sw.ElapsedMilliseconds}ms\r\n");
+                rtbMultiResults.AppendText("\r\nTime: " + sw.ElapsedMilliseconds + "ms\r\n");
 
-                SaveToHistory(recordType.ToString() ?? "Unknown", query, sw.ElapsedMilliseconds, "");
+                SaveToHistory(recordType.ToString(), query, sw.ElapsedMilliseconds, "");
                 RefreshHistory();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}", "Query Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error: " + ex.Message, "Query Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private async void BtnProcessBatch_Click(object? sender, EventArgs e)
+        private void BtnProcessBatch_Click(object sender, EventArgs e)
         {
-            var filePath = txtBatchFile.Text.Trim();
+            string filePath = txtBatchFile.Text.Trim();
             if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
             {
                 MessageBox.Show("Please select a valid file", "File Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -622,25 +621,23 @@ namespace DnsLookupTool
 
             try
             {
-                var lines = (await File.ReadAllLinesAsync(filePath))
-                    .Select(l => l.Trim())
-                    .Where(l => !string.IsNullOrWhiteSpace(l))
-                    .ToArray();
+                string[] lines = File.ReadAllLines(filePath);
+                lines = lines.Select(l => l.Trim()).Where(l => !string.IsNullOrWhiteSpace(l)).ToArray();
 
                 progressBatch.Maximum = lines.Length;
                 progressBatch.Value = 0;
 
                 for (int i = 0; i < lines.Length; i++)
                 {
-                    var line = lines[i];
+                    string line = lines[i];
                     try
                     {
-                        var client = CreateLookupClient();
-                        var sw = System.Diagnostics.Stopwatch.StartNew();
-                        var res = await client.QueryAsync(line, QueryType.A);
+                        LookupClient client = CreateLookupClient();
+                        System.Diagnostics.Stopwatch sw = System.Diagnostics.Stopwatch.StartNew();
+                        DnsClient.Protocol.IDnsQueryResponse res = client.Query(line, QueryType.A);
                         sw.Stop();
 
-                        var addrs = res.Answers.OfType<DnsClient.Protocol.ARecord>()
+                        string[] addrs = res.Answers.OfType<DnsClient.Protocol.ARecord>()
                             .Select(r => r.Address.ToString())
                             .ToArray();
 
@@ -648,12 +645,12 @@ namespace DnsLookupTool
                             ? string.Join(", ", addrs)
                             : "No results";
 
-                        rtbBatchResults.AppendText($"✓ {line} => {result} ({sw.ElapsedMilliseconds}ms)\r\n");
+                        rtbBatchResults.AppendText("✓ " + line + " => " + result + " (" + sw.ElapsedMilliseconds + "ms)\r\n");
                         SaveToHistory("A", line, sw.ElapsedMilliseconds, result);
                     }
                     catch (Exception ex)
                     {
-                        rtbBatchResults.AppendText($"✗ {line} => Error: {ex.Message}\r\n");
+                        rtbBatchResults.AppendText("✗ " + line + " => Error: " + ex.Message + "\r\n");
                     }
 
                     progressBatch.Value = i + 1;
@@ -665,52 +662,50 @@ namespace DnsLookupTool
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}", "Batch Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error: " + ex.Message, "Batch Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void BtnConfigDns_Click(object? sender, EventArgs e)
+        private void BtnConfigDns_Click(object sender, EventArgs e)
         {
-            var form = new DnsConfigForm { DnsServer = CustomDnsServer };
+            DnsConfigForm form = new DnsConfigForm { DnsServer = CustomDnsServer };
             if (form.ShowDialog() == DialogResult.OK)
             {
                 CustomDnsServer = form.DnsServer;
-                lblDnsServer.Text = $"DNS Server: {(CustomDnsServer?.ToString() ?? "Default")}";
+                lblDnsServer.Text = "DNS Server: " + (CustomDnsServer != null ? CustomDnsServer.ToString() : "Default");
             }
         }
 
-        private void BtnBrowseBatch_Click(object? sender, EventArgs e)
+        private void BtnBrowseBatch_Click(object sender, EventArgs e)
         {
-            using (var ofd = new OpenFileDialog { Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*" })
+            OpenFileDialog ofd = new OpenFileDialog { Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*" };
+            if (ofd.ShowDialog() == DialogResult.OK)
             {
-                if (ofd.ShowDialog() == DialogResult.OK)
+                txtBatchFile.Text = ofd.FileName;
+            }
+            ofd.Dispose();
+        }
+
+        private void BtnExportResults_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog { Filter = "Text Files (*.txt)|*.txt|CSV Files (*.csv)|*.csv" };
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                try
                 {
-                    txtBatchFile.Text = ofd.FileName;
+                    string[] lines = QueryHistory.Select(h => h.Type + "\t" + h.Query + "\t" + h.Timestamp + "\t" + h.ElapsedMs + "ms").ToArray();
+                    File.WriteAllLines(sfd.FileName, lines);
+                    MessageBox.Show("Export successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Export failed: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+            sfd.Dispose();
         }
 
-        private void BtnExportResults_Click(object? sender, EventArgs e)
-        {
-            using (var sfd = new SaveFileDialog { Filter = "Text Files (*.txt)|*.txt|CSV Files (*.csv)|*.csv" })
-            {
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        var lines = QueryHistory.Select(h => $"{h.Type}\t{h.Query}\t{h.Timestamp}\t{h.ElapsedMs}ms");
-                        File.WriteAllLines(sfd.FileName, lines);
-                        MessageBox.Show("Export successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Export failed: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-        }
-
-        private void BtnGenerateReport_Click(object? sender, EventArgs e)
+        private void BtnGenerateReport_Click(object sender, EventArgs e)
         {
             if (QueryHistory.Count == 0)
             {
@@ -720,20 +715,19 @@ namespace DnsLookupTool
 
             try
             {
-                var sb = new StringBuilder();
+                StringBuilder sb = new StringBuilder();
                 sb.AppendLine("DNS Lookup Tool - Report");
-                sb.AppendLine($"Generated: {DateTime.Now}");
-                sb.AppendLine($"Total Queries: {QueryHistory.Count}\r\n");
+                sb.AppendLine("Generated: " + DateTime.Now);
+                sb.AppendLine("Total Queries: " + QueryHistory.Count + "\r\n");
 
-                var byType = QueryHistory.GroupBy(h => h.Type)
-                    .OrderByDescending(g => g.Count());
+                var byType = QueryHistory.GroupBy(h => h.Type).OrderByDescending(g => g.Count());
 
                 sb.AppendLine("Statistics by Type:");
                 foreach (var g in byType)
                 {
-                    var times = g.Where(x => x.ElapsedMs >= 0).Select(x => (double)x.ElapsedMs).ToArray();
-                    var avg = times.Length > 0 ? times.Average() : 0;
-                    sb.AppendLine($"  {g.Key ?? "Unknown"}: {g.Count()} queries, avg {avg:F1}ms");
+                    double[] times = g.Where(x => x.ElapsedMs >= 0).Select(x => (double)x.ElapsedMs).ToArray();
+                    double avg = times.Length > 0 ? times.Average() : 0;
+                    sb.AppendLine("  " + g.Key + ": " + g.Count() + " queries, avg " + avg.ToString("F1") + "ms");
                 }
 
                 sb.AppendLine("\nTop 10 Queries:");
@@ -742,56 +736,60 @@ namespace DnsLookupTool
                     .Take(10);
                 foreach (var g in topQueries)
                 {
-                    sb.AppendLine($"  {g.Key}: {g.Count()} times");
+                    sb.AppendLine("  " + g.Key + ": " + g.Count() + " times");
                 }
 
-                var reportPath = "report.txt";
+                string reportPath = "report.txt";
                 File.WriteAllText(reportPath, sb.ToString());
-                MessageBox.Show($"Report generated: {Path.GetFullPath(reportPath)}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Report generated: " + Path.GetFullPath(reportPath), "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Report generation failed: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Report generation failed: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         // Helper Methods
         private QueryType GetQueryType(string typeStr)
         {
-            return typeStr switch
-            {
-                "AAAA" => QueryType.AAAA,
-                "PTR" => QueryType.PTR,
-                "MX" => QueryType.MX,
-                "CNAME" => QueryType.CNAME,
-                "TXT" => QueryType.TXT,
-                "NS" => QueryType.NS,
-                "SOA" => QueryType.SOA,
-                _ => QueryType.A
-            };
+            if (typeStr == "AAAA") return QueryType.AAAA;
+            if (typeStr == "PTR") return QueryType.PTR;
+            if (typeStr == "MX") return QueryType.MX;
+            if (typeStr == "CNAME") return QueryType.CNAME;
+            if (typeStr == "TXT") return QueryType.TXT;
+            if (typeStr == "NS") return QueryType.NS;
+            if (typeStr == "SOA") return QueryType.SOA;
+            return QueryType.A;
         }
 
         private string FormatRecord(QueryType type, DnsClient.Protocol.DnsResourceRecord answer)
         {
-            return type switch
-            {
-                QueryType.A => $"A: {((DnsClient.Protocol.ARecord)answer).Address}",
-                QueryType.AAAA => $"AAAA: {((DnsClient.Protocol.AaaaRecord)answer).Address}",
-                QueryType.PTR => $"PTR: {((DnsClient.Protocol.PtrRecord)answer).PtrDomainName}",
-                QueryType.MX => $"MX: {((DnsClient.Protocol.MxRecord)answer).Exchange} (Preference: {((DnsClient.Protocol.MxRecord)answer).Preference})",
-                QueryType.CNAME => $"CNAME: {((DnsClient.Protocol.CNameRecord)answer).CanonicalName}",
-                QueryType.TXT => $"TXT: {string.Join(" ", ((DnsClient.Protocol.TxtRecord)answer).Text)}",
-                QueryType.NS => $"NS: {((DnsClient.Protocol.NsRecord)answer).NSDName}",
-                QueryType.SOA => $"SOA: {((DnsClient.Protocol.SoaRecord)answer).MName}",
-                _ => "Unknown record type"
-            };
+            if (type == QueryType.A)
+                return "A: " + ((DnsClient.Protocol.ARecord)answer).Address.ToString();
+            if (type == QueryType.AAAA)
+                return "AAAA: " + ((DnsClient.Protocol.AaaaRecord)answer).Address.ToString();
+            if (type == QueryType.PTR)
+                return "PTR: " + ((DnsClient.Protocol.PtrRecord)answer).PtrDomainName.ToString();
+            if (type == QueryType.MX)
+                return "MX: " + ((DnsClient.Protocol.MxRecord)answer).Exchange + " (Preference: " + ((DnsClient.Protocol.MxRecord)answer).Preference + ")";
+            if (type == QueryType.CNAME)
+                return "CNAME: " + ((DnsClient.Protocol.CNameRecord)answer).CanonicalName.ToString();
+            if (type == QueryType.TXT)
+                return "TXT: " + string.Join(" ", ((DnsClient.Protocol.TxtRecord)answer).Text);
+            if (type == QueryType.NS)
+                return "NS: " + ((DnsClient.Protocol.NsRecord)answer).NSDName.ToString();
+            if (type == QueryType.SOA)
+                return "SOA: " + ((DnsClient.Protocol.SoaRecord)answer).MName.ToString();
+            return "Unknown record type";
         }
 
         private LookupClient CreateLookupClient()
         {
-            var options = CustomDnsServer != null
-                ? new LookupClientOptions(CustomDnsServer) { Timeout = Timeout, Retries = RetryCount }
-                : new LookupClientOptions { Timeout = Timeout, Retries = RetryCount };
+            LookupClientOptions options;
+            if (CustomDnsServer != null)
+                options = new LookupClientOptions(CustomDnsServer) { Timeout = Timeout, Retries = RetryCount };
+            else
+                options = new LookupClientOptions { Timeout = Timeout, Retries = RetryCount };
             return new LookupClient(options);
         }
 
@@ -810,7 +808,7 @@ namespace DnsLookupTool
         private void RefreshHistory()
         {
             dgvHistory.Rows.Clear();
-            foreach (var entry in QueryHistory.OrderByDescending(h => h.Timestamp).Take(100))
+            foreach (HistoryEntry entry in QueryHistory.OrderByDescending(h => h.Timestamp).Take(100))
             {
                 dgvHistory.Rows.Add(entry.Type, entry.Query, entry.Timestamp.ToString("g"), entry.ElapsedMs);
             }
@@ -820,7 +818,7 @@ namespace DnsLookupTool
         {
             try
             {
-                var json = JsonConvert.SerializeObject(QueryHistory);
+                string json = JsonConvert.SerializeObject(QueryHistory);
                 File.WriteAllText("history.json", json);
             }
             catch { }
@@ -832,7 +830,7 @@ namespace DnsLookupTool
             {
                 if (File.Exists("history.json"))
                 {
-                    var json = File.ReadAllText("history.json");
+                    string json = File.ReadAllText("history.json");
                     QueryHistory = JsonConvert.DeserializeObject<List<HistoryEntry>>(json) ?? new List<HistoryEntry>();
                 }
             }
@@ -846,8 +844,8 @@ namespace DnsLookupTool
         {
             try
             {
-                var obj = new { ForceTcpOnly, EnableDnsSec };
-                var json = JsonConvert.SerializeObject(obj, Formatting.Indented);
+                object obj = new { ForceTcpOnly, EnableDnsSec };
+                string json = JsonConvert.SerializeObject(obj, Formatting.Indented);
                 File.WriteAllText(SecuritySettingsFile, json);
             }
             catch { }
@@ -859,8 +857,8 @@ namespace DnsLookupTool
             {
                 if (File.Exists(SecuritySettingsFile))
                 {
-                    var json = File.ReadAllText(SecuritySettingsFile);
-                    var node = JsonConvert.DeserializeObject<dynamic>(json);
+                    string json = File.ReadAllText(SecuritySettingsFile);
+                    dynamic node = JsonConvert.DeserializeObject(json);
                     if (node != null)
                     {
                         ForceTcpOnly = node.ForceTcpOnly == true;
@@ -886,10 +884,17 @@ namespace DnsLookupTool
     // Support Classes
     public class HistoryEntry
     {
-        public string Type { get; set; } = "";
-        public string Query { get; set; } = "";
+        public string Type { get; set; }
+        public string Query { get; set; }
         public DateTime Timestamp { get; set; }
         public long ElapsedMs { get; set; }
-        public string Details { get; set; } = "";
+        public string Details { get; set; }
+
+        public HistoryEntry()
+        {
+            Type = "";
+            Query = "";
+            Details = "";
+        }
     }
 }

@@ -6,12 +6,12 @@ namespace DnsLookupTool
 {
     public partial class DnsConfigForm : Form
     {
-        public IPAddress? DnsServer { get; set; }
+        public IPAddress DnsServer { get; set; }
 
-        private TextBox txtDnsIp = null!;
-        private Button btnOk = null!;
-        private Button btnCancel = null!;
-        private Button btnDefault = null!;
+        private TextBox txtDnsIp;
+        private Button btnOk;
+        private Button btnCancel;
+        private Button btnDefault;
 
         public DnsConfigForm()
         {
@@ -27,7 +27,7 @@ namespace DnsLookupTool
             this.MaximizeBox = false;
             this.MinimizeBox = false;
 
-            var lblInstruction = new Label
+            Label lblInstruction = new Label
             {
                 Text = "Enter DNS Server IP or leave blank for default:",
                 Location = new Point(20, 20),
@@ -40,11 +40,11 @@ namespace DnsLookupTool
                 Location = new Point(20, 50),
                 Size = new Size(350, 30),
                 Font = new Font("Segoe UI", 11),
-                Text = DnsServer?.ToString() ?? ""
+                Text = DnsServer != null ? DnsServer.ToString() : ""
             };
             this.Controls.Add(txtDnsIp);
 
-            var lblExample = new Label
+            Label lblExample = new Label
             {
                 Text = "Example: 8.8.8.8 (Google DNS) or 1.1.1.1 (Cloudflare DNS)",
                 Location = new Point(20, 90),
@@ -95,9 +95,9 @@ namespace DnsLookupTool
             this.CancelButton = btnCancel;
         }
 
-        private void BtnOk_Click(object? sender, EventArgs e)
+        private void BtnOk_Click(object sender, EventArgs e)
         {
-            var input = txtDnsIp.Text.Trim();
+            string input = txtDnsIp.Text.Trim();
             if (string.IsNullOrWhiteSpace(input))
             {
                 DnsServer = null;
@@ -106,7 +106,8 @@ namespace DnsLookupTool
                 return;
             }
 
-            if (IPAddress.TryParse(input, out var ip))
+            IPAddress ip;
+            if (IPAddress.TryParse(input, out ip))
             {
                 DnsServer = ip;
                 this.DialogResult = DialogResult.OK;

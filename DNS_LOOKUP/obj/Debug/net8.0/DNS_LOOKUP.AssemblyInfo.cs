@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DNS_LOOKUP")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8f67a690d00e8bac47b3ef10d9697c9f912793f9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6985903e3b86caab9d63db806843af96406c21fe")]
 [assembly: System.Reflection.AssemblyProductAttribute("DNS_LOOKUP")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DNS_LOOKUP")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
