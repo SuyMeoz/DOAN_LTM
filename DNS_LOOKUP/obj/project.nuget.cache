@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "XjqFC79UFqo=",
+  "dgSpecHash": "sG+/njnrM88=",
   "success": true,
   "projectFilePath": "/workspaces/DOAN_LTM/DNS_LOOKUP/DNS_LOOKUP.csproj",
   "expectedPackageFiles": [
     "/home/codespace/.nuget/packages/dnsclient/1.8.0/dnsclient.1.8.0.nupkg.sha512",
-    "/home/codespace/.nuget/packages/newtonsoft.json/13.0.4/newtonsoft.json.13.0.4.nupkg.sha512"
+    "/home/codespace/.nuget/packages/newtonsoft.json/13.0.4/newtonsoft.json.13.0.4.nupkg.sha512",
+    "/home/codespace/.nuget/packages/microsoft.windowsdesktop.app.ref/8.0.21/microsoft.windowsdesktop.app.ref.8.0.21.nupkg.sha512"
   ],
   "logs": []
 }
